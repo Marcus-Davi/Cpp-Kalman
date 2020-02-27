@@ -1,3 +1,4 @@
 # Cpp-Kalman
 
-Implementação de vários filtros de Kalman em C++
+Implementação dos filtros (Linear, Estendido) de Kalman em C++
+
