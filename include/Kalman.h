@@ -1,24 +1,23 @@
 #ifndef KALMAN_H
 #define KALMAN_H
 #include "Eigen/Dense"
-#include <iostream> //deebug
 
+#include <iostream>
 
 using namespace Eigen;
 
 
 typedef void (*KalmanFunctionPt)(const VectorXd& Xk,const VectorXd& Uk,void* Res); // M é entrada,saída ou uma matriz
+
+typedef Matrix<double,Dynamic,Dynamic,RowMajor> MatrixKalman;
 //classe para implementação do filtro de kalman estendido
 namespace Kalman {
 
-	
 class EKF {
 	public:
 		EKF(unsigned int n_states,unsigned int n_inputs, unsigned int n_outputs);
-
-
 		~EKF();
-		
+
 		//Ponteiros para functions
 		inline void SetStateFunction(KalmanFunctionPt F) {
 		StateFun = F;
@@ -33,29 +32,45 @@ class EKF {
 		MeasureFun = F;
 		}
 
-		void Predict(const float* input); //TODO fazer template ?
-		void Update(const float* output);
+		inline void SetRn(const double* Rn_){
+			for(unsigned int i=0;i<n_outputs*n_outputs;++i)
+			Rn(i) = Rn_[i];
+
+			std::cout << Rn << std::endl;
+		}
+		inline void SetQn(const double* Qn_){
+
+			for(unsigned int i=0;i<n_states*n_states;++i)
+			Qn(i) = Qn_[i];
+
+			std::cout << Qn << std::endl;
+		}
+
+		void Predict(const double* input); //TODO fazer template ?
+		void Update(const double* output);
+		void GetEstimatedStates(double* states);
 
 
 
 	private:
 
-	unsigned int n_states;
-	unsigned int n_outputs;
-	unsigned int n_inputs;
+	const unsigned int n_states;
+	const unsigned int n_outputs;
+  const unsigned int n_inputs;
 
 	KalmanFunctionPt StateFun;
 	KalmanFunctionPt MeasureFun;
 	KalmanFunctionPt Jacobian_F;
 	KalmanFunctionPt Jacobian_H;
-	
-	MatrixXd Jf; //Jacobian F
-	MatrixXd Jh; // Jacobian H
 
-	MatrixXd Qn,Rn; //Covariancias
-	MatrixXd Kk,Pk; //Ganho de Kalman e Covariancia erro
+	MatrixKalman Jf; //Jacobian F
+	MatrixKalman Jh; // Jacobian H
 
-	VectorXd Xest,Y,Yest,U; //x estimado, saida Y, Y estimado, entrada U
+	MatrixKalman Qn,Rn; //Covariancias
+	MatrixKalman Kk,Pk; //Ganho de Kalman e Covariancia erro
+	MatrixKalman S; //Inversa
+
+	VectorXd Xest,Y,Yest,U,E; //x estimado, saida Y, Y estimado, entrada U, err
 
 	MatrixXd I; // Identidade
 

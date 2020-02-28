@@ -26,7 +26,7 @@ static void StateJacobian(const VectorXd& Xk,const VectorXd& Uk,void* M_){
 	// Uk -> entrada gyro 3x1
 	// M-> 4x4
 	MatrixXd* M = static_cast<MatrixXd*>(M_);
-	
+
 	(*M)(0,0) = 1.0f;
 	(*M)(0,1) = -Uk(0)*SystemTs/2;
 	(*M)(0,2) = -Uk[1]*SystemTs/2;
@@ -52,19 +52,41 @@ using namespace std;
 using namespace Eigen;
 int main(){
 
-	Kalman::EKF Filtro(4,3,3);
+cout << "Teste Kalman" << endl;
+	Kalman::EKF Filtro(4,3,6);
 
-	
+	double Qn[4*4] = {
+			0.001, -0.0003, 0.0003, 0.0003,
+			-0.0003,0.0001,-0.0001,-0.0001,
+			0.0003,-0.0001,0.0001,0.0001,
+			0.0003,-0.0001,0.0001,0.0001
+	}; //3x3 n x n
 
+	double Rn[6*6] = {
+			0.1,0,0,0,0,0,
+			0,0.1,0,0,0,0,
+			0,0,0.1,0,0,0,
+			0,0,0,2,0,0,
+			0,0,0,0,2,0,
+			0,0,0,0,0,3,
+	}; //3x3 out x out
 
+double saida[4];
+
+  Filtro.SetQn(Qn);
+	Filtro.SetRn(Rn);
 	Filtro.SetStateJacobian(StateJacobian);
 	Filtro.SetStateFunction(StateFunction);
 
-	float input[3] = {5,6,7};
+	double input[3] = {5,6,7};
 
 	Filtro.Predict(input);
 
-	
+	double output[6] = {1,2,3,4,5,6};
+
+	Filtro.Update(output);
+
+	//Filtro.GetEstimatedStates(saida);
 
 
 
@@ -72,5 +94,9 @@ int main(){
 
 
 
-	
+
+
+
+
+
 }
