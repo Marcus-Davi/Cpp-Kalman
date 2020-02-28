@@ -73,6 +73,8 @@ cout << "Teste Kalman" << endl;
 
 double saida[4];
 
+return 0;
+
   Filtro.SetQn(Qn);
 	Filtro.SetRn(Rn);
 	Filtro.SetStateJacobian(StateJacobian);
@@ -80,11 +82,11 @@ double saida[4];
 
 	double input[3] = {5,6,7};
 
-	Filtro.Predict(input);
+//	Filtro.Predict(input);
 
-	double output[6] = {1,2,3,4,5,6};
+//	double output[6] = {1,2,3,4,5,6};
 
-	Filtro.Update(output);
+//	Filtro.Update(output);
 
 	//Filtro.GetEstimatedStates(saida);
 

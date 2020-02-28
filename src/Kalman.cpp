@@ -8,7 +8,6 @@ EKF::EKF(unsigned int n_states_,unsigned int n_inputs_, unsigned int n_outputs_)
 {
 
 
-
 	Jf.resize(n_states,n_states);
 	Jh.resize(n_outputs,n_states);
 	Qn.resize(n_states,n_states);
@@ -23,12 +22,6 @@ EKF::EKF(unsigned int n_states_,unsigned int n_inputs_, unsigned int n_outputs_)
 
 	I = MatrixXd::Identity(n_states,n_states);
 	Pk = MatrixXd::Identity(n_states,n_states);
-
-std::cout << "FVars: " << std::endl;
-std::cout << n_states << std::endl;
-std::cout << n_inputs << std::endl;
-std::cout << n_outputs << std::endl;
-
 
 }
 
