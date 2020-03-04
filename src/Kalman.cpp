@@ -36,8 +36,12 @@ void EKF::Predict(const double* Input){
 	 U(k) = Input[k];
    }
 
+   //std::cout << "U: " <<U << std::endl;
+
 	StateFun(Xest,U,&Xest);
 	Jacobian_F(Xest,U,&Jf);
+
+	
 	Pk = Jf*Pk*Jf.transpose() + Qn;
 }
 
@@ -46,6 +50,8 @@ void EKF::Update(const double* Measurement){
 	for(unsigned int k=0;k<n_outputs;++k){
 		Y(k) = Measurement[k];
 	}
+
+	//std::cout << "M: " << Y << std::endl;
 
 MeasureFun(Xest,U,&Yest);
 Jacobian_H(Xest,U,&Jh);
@@ -62,8 +68,6 @@ Pk = (I-Kk*Jh)*Pk;
 void EKF::GetEstimatedStates(double* states){
 for(unsigned int i=0;i<n_states;++i)
 states[i] = Xest[i];
-
-
 }
 
 

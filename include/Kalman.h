@@ -46,6 +46,11 @@ class EKF {
 			std::cout << Qn << std::endl;
 		}
 
+		inline void SetX0(const double* x0){
+		for(unsigned int i=0;i<n_states;++i)
+		 Xest[i] = x0[i];
+		}			
+
 		void Predict(const double* input); //TODO fazer template ?
 		void Update(const double* output);
 		void GetEstimatedStates(double* states);
